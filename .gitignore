@@ -1,0 +1,12 @@
+# PERSONAL FINANCIAL DATA — never commit
+memory/
+inbox/*
+!inbox/.gitkeep
+accounts/
+*.env
+
+# OS / editor noise
+.DS_Store
+*.pyc
+__pycache__/
+node_modules/
