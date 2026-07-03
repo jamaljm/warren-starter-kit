@@ -37,4 +37,4 @@ Same pattern anywhere: find your broker's read-only API or export flow (Schwab/F
 ## What NOT to do
 - ❌ No order-placement API keys in the agent's reach, ever.
 - ❌ No storing broker passwords/TOTP secrets in the repo (even gitignored — keep them in your OS keychain).
-- ❌ No cron jobs that trade. Scheduled *reports* are great; scheduled *orders* are how you wake up to surprises.
+- ❌ No cron jobs that trade. Scheduled *reports* are great (see [scheduled-runs.md](scheduled-runs.md)); scheduled *orders* are how you wake up to surprises.

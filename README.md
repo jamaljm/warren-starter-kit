@@ -2,9 +2,9 @@
 
 **Turn Claude Code into your personal finance agent in 20 minutes.**
 
-This is a template repository for building your own AI finance agent — one that interviews you about your finances, remembers everything between sessions, screens stocks with hard quality gates, plans deployments with stop-losses, and logs every decision to files you can audit.
+This is a template for building your own AI finance agent: one that interviews you about your finances, remembers everything between sessions, screens stocks with hard quality gates, plans deployments with stop-losses, and logs every decision to files you can audit.
 
-It's the exact system described in the blog post *"I Built an AI Stock Analyst Called Warren"* — generalized so anyone can start from zero.
+It's the exact system behind [I let Claude pick my stocks. Two months later, I'm up 20%.](https://heyjamal.vercel.app/blog/i-let-claude-pick-my-stocks), generalized so anyone can start from zero. The picks it produced are tracked live, wins and losses, on [Claudefolio](https://heyjamal.vercel.app/portfolio).
 
 > ⚠️ **What this is not:** investment advice, a get-rich scheme, or an auto-trader. The agent researches and plans; **you** decide and click. It never executes trades. See [DISCLAIMER.md](DISCLAIMER.md).
 
@@ -13,27 +13,38 @@ It's the exact system described in the blog post *"I Built an AI Stock Analyst C
 ## Quick Start (20 minutes)
 
 ### 1. Get the kit
+
+Click **"Use this template"** at the top of this repo (recommended, keeps your copy private), or clone directly:
+
 ```bash
-git clone https://github.com/<you>/warren-starter-kit my-warren
+git clone https://github.com/jamaljm/warren-starter-kit my-warren
 cd my-warren
 ```
 
+If you clone, make your copy private before putting any real numbers near it. Your data lives in `memory/` and `inbox/`, which are gitignored either way.
+
 ### 2. Install Claude Code
+
 ```bash
 npm install -g @anthropic-ai/claude-code
 ```
-(Needs a Claude subscription or API key — see [claude.com/claude-code](https://claude.com/claude-code).)
+
+Needs a Claude subscription or API key. See [claude.com/claude-code](https://claude.com/claude-code). Use the most capable model you have access to; the agent is doing real analysis, not autocomplete.
 
 ### 3. Start the agent
+
 ```bash
 claude
 ```
+
 Then just type:
+
 ```
 start my onboarding
 ```
 
 The agent reads [ONBOARDING.md](ONBOARDING.md) and interviews you step by step:
+
 - income, expenses, savings capacity
 - bank balances and emergency fund
 - existing investments (paste your holdings, or drop a CSV in `inbox/`)
@@ -42,13 +53,27 @@ The agent reads [ONBOARDING.md](ONBOARDING.md) and interviews you step by step:
 
 It writes everything into `memory/` files. From then on, **every session starts with the agent already knowing your finances.**
 
-### 4. Your first real session
+### 4. Verify the memory actually works
+
+Quit, reopen `claude`, and ask:
+
+```
+what do you know about me?
+```
+
+If it plays back your numbers from the files, the loop is working. If it asks who you are, see Troubleshooting below.
+
+### 5. Your first real session
+
 Try any of these:
+
 ```
 give me a full financial health check
 screen [stock you're curious about] against the quality gates
 I can invest ₹25,000/month — build me a starting plan
 ```
+
+Not sure what a finished setup looks like? Browse [examples/onboarded-example/](examples/onboarded-example/), a fictional user's files after onboarding and a few weeks of use.
 
 ---
 
@@ -66,17 +91,19 @@ my-warren/
 │   └── YYYY-MM-DD.md  ← daily decision logs
 ├── inbox/             ← drop bank statements / holdings CSVs here — gitignored
 ├── templates/         ← blank templates the agent fills
+├── examples/          ← a filled-in FICTIONAL example, so you can see the target
 ├── prompts/PROMPTS.md ← copy-paste prompt library
 └── docs/
     ├── screening-criteria.md   ← the 10-point stock quality gate
     ├── safety-rules.md         ← non-negotiable guardrails
-    └── broker-integration.md   ← optional: read-only broker API setup
+    ├── broker-integration.md   ← optional: read-only broker API setup
+    └── scheduled-runs.md       ← optional: daily auto-analysis (morning briefs)
 ```
 
 **The three ideas that make it work:**
 
 1. **Files are the memory.** The agent forgets everything between sessions; markdown files don't. Every session starts by reading `MEMORY.md` + `memory/portfolio.md`, and every session writes at least one update back.
-2. **Hard gates beat vibes.** Stocks are screened against explicit criteria ([docs/screening-criteria.md](docs/screening-criteria.md)) — including the cash-conversion gate that kills most "high growth" traps. The agent's most common (and most valuable) answer is *"no, and here's why."*
+2. **Hard gates beat vibes.** Stocks are screened against explicit criteria ([docs/screening-criteria.md](docs/screening-criteria.md)), including the cash-conversion gate that kills most "high growth" traps. The agent's most common (and most valuable) answer is *"no, and here's why."*
 3. **The human clicks.** The agent produces order cards (symbol, qty, limit price, stop-loss). You place them at your broker. That separation is a feature, not a limitation.
 
 ---
@@ -90,18 +117,32 @@ my-warren/
 | Earnings season | Verify every holding's thesis against actual results |
 | Every ~2 months | Full cycle: fresh screen → verify survivors → staggered deployment plan → review |
 
+## Troubleshooting
+
+**The agent doesn't know me in a new session.** You probably opened `claude` in a different folder. The persona and memory only exist inside this folder; always start the agent from the kit's directory. If the files exist and it still didn't read them, say: `read MEMORY.md and the memory/ files, then act`.
+
+**Onboarding went wrong and I want a clean start.** Delete the files inside `memory/`, reset `MEMORY.md` to its original one-liner, and type `start my onboarding` again.
+
+**It's giving shallow answers.** Check which model you're running (`/model` inside Claude Code) and switch to the strongest one available to you. Screening and verification are exactly the kind of work where model quality shows.
+
+**It stated a price or ratio that looks off.** It happens; models can fetch stale pages or misread tables. The rules already require it to cite sources fetched this session. Cross-check the two numbers that decide any trade (cash conversion and forward guidance) at the primary source before acting. This rule is in [docs/safety-rules.md](docs/safety-rules.md) for a reason.
+
 ## FAQ
 
 **Is my financial data safe?** It lives in local markdown files in `memory/` and `inbox/`, both gitignored. Nothing is uploaded anywhere except to the model while you chat (same as anything you type into Claude). Don't commit these folders if you fork publicly.
 
 **Do I need a broker API?** No. Level 0 (nothing connected) gives you 90% of the value via web research. See [docs/broker-integration.md](docs/broker-integration.md) if you want live portfolio reads later.
 
-**Does this work outside India?** Yes — the process is universal. Templates use ₹ and Indian examples (Screener.in, ValuePickr); swap for your market's equivalents.
+**Does this work outside India?** Yes, the process is universal. Templates use ₹ and Indian examples (Screener.in, ValuePickr); swap for your market's equivalents.
 
 **Can it trade for me?** No, and don't change that. Read [docs/safety-rules.md](docs/safety-rules.md) before you're tempted.
 
+**What does it cost to run?** A Claude subscription and a couple of focused hours a week. The heavy research sessions burn serious tokens; a paid plan is realistic for real use.
+
 ## Contributing
+
 PRs welcome: better templates, prompts for new use cases (tax planning, debt payoff, FIRE math), localization for other markets.
 
 ## License
+
 MIT — see [LICENSE](LICENSE). Use it, fork it, build on it.

@@ -63,6 +63,24 @@ Monthly review: net worth vs last month, savings rate, portfolio vs plan,
 goal progress, what to change. Update all memory files.
 ```
 
+## Session hygiene
+```
+what do you know about me? Summarize from the memory files, don't guess.
+```
+*(Run this in a fresh session after onboarding. If it can't answer, the memory loop is broken. Fix that before anything else.)*
+```
+End of session: write everything new to memory, update the MEMORY.md
+index, and list exactly which files you changed.
+```
+```
+Something in my profile is wrong: <what>. Correct it in the memory files
+now and confirm what you changed.
+```
+```
+Full reset: my onboarding data is stale. Re-run the onboarding interview
+from ONBOARDING.md and rewrite the memory files from scratch.
+```
+
 ## Discipline enforcement (use on yourself)
 ```
 I want to buy <STOCK> because <reason>. Steelman the case AGAINST it,
