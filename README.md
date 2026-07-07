@@ -4,7 +4,7 @@
 
 This is a template for building your own AI finance agent: one that interviews you about your finances, remembers everything between sessions, screens stocks with hard quality gates, plans deployments with stop-losses, and logs every decision to files you can audit.
 
-It's the exact system behind [I let Claude pick my stocks. Two months later, I'm up 20%.](https://heyjamal.vercel.app/blog/i-let-claude-pick-my-stocks), generalized so anyone can start from zero. The picks it produced are tracked live, wins and losses, on [Claudefolio](https://heyjamal.vercel.app/portfolio).
+It's the exact system behind [I let Claude pick my stocks. Two months later, I'm up 20%.](https://heyjamal.com/blog/i-let-claude-pick-my-stocks), generalized so anyone can start from zero. The picks it produced are tracked live, wins and losses, on [Claudefolio](https://heyjamal.com/portfolio).
 
 > ⚠️ **What this is not:** investment advice, a get-rich scheme, or an auto-trader. The agent researches and plans; **you** decide and click. It never executes trades. See [DISCLAIMER.md](DISCLAIMER.md).
 
